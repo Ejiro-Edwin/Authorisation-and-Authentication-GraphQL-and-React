@@ -1,0 +1,24 @@
+{
+   "type": "postgres",
+   "host": "manny.db.elephantsql.com",
+   "port": 5432,
+   "username": "fverlxew",
+   "password": "8uJwaWB9q1cvNdlPM2mtlB9kKNbP_V4Z",
+   "database": "fverlxew",
+   "synchronize": true,
+   "logging": false,
+   "entities": [
+      "src/entity/**/*.ts"
+   ],
+   "migrations": [
+      "src/migration/**/*.ts"
+   ],
+   "subscribers": [
+      "src/subscriber/**/*.ts"
+   ],
+   "cli": {
+      "entitiesDir": "src/entity",
+      "migrationsDir": "src/migration",
+      "subscribersDir": "src/subscriber"
+   }
+}

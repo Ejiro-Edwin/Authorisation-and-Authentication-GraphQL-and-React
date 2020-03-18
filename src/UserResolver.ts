@@ -1,7 +1,9 @@
-import { Resolver, Query, Arg,Mutation, Field,ObjectType } from 'type-graphql';
+import { Resolver, Query, Arg,Mutation, Field,ObjectType, Ctx } from 'type-graphql';
 import {hash, compare} from 'bcryptjs';
 import {sign} from 'jsonwebtoken';
 import {User} from './entity/User';
+import { MyContext } from './MyContext';
+import { createRefreshToken, createAccessToken } from './auth';
 
 @ObjectType()
 class LoginResponse{
@@ -48,7 +50,8 @@ export class UserResolver{
       @Mutation(()=> LoginResponse)
       async login(
             @Arg("email") email:string,
-            @Arg("password") password:string
+            @Arg("password") password:string,
+            @Ctx() {res}:MyContext
       ):Promise<LoginResponse>{
   
             const user = await User.findOne({where:{email}})
@@ -61,6 +64,8 @@ export class UserResolver{
                   throw new Error ("bad password");
             }
             
-            return {accessToken:sign({userId:user.id},'secret',{expiresIn:'15m'})}
+            res.cookie('jid',createRefreshToken(user), {httpOnly:true})
+
+            return {accessToken:createAccessToken(user)}
       }
 }

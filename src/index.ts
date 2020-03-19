@@ -9,8 +9,6 @@ import {buildSchema} from 'type-graphql'
 (async () => {
     const app = express();
     app.get('/', (_req,res) => res.send("hello Ejiro"));
-    console.log(process.env.ACCESS_TOKEN_SECRET)
-    console.log(process.env.REFRESH_TOKEN_SECRET)
     await createConnection();
     const apolloServer = new ApolloServer({
   schema: await buildSchema({

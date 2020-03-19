@@ -1,9 +1,10 @@
-import { Resolver, Query, Arg,Mutation, Field,ObjectType, Ctx } from 'type-graphql';
+import { Resolver, Query, Arg,Mutation, Field,ObjectType, Ctx, UseMiddleware } from 'type-graphql';
 import {hash, compare} from 'bcryptjs';
-import {sign} from 'jsonwebtoken';
 import {User} from './entity/User';
 import { MyContext } from './MyContext';
 import { createRefreshToken, createAccessToken } from './auth';
+import { isAuth } from './isAuth';
+import { collectFields } from 'graphql/execution/execute';
 
 @ObjectType()
 class LoginResponse{
@@ -16,6 +17,15 @@ export class UserResolver{
       @Query(() => String)
       hello(){
             return 'hi!'
+      }
+
+      @Query(() => String)
+      @UseMiddleware(isAuth)
+      bye(
+            @Ctx() {payload}:MyContext){
+            console.log(payload)
+      
+            return `your user id is: ${payload!.userId}`
       }
       
       @Query(() => [User])
